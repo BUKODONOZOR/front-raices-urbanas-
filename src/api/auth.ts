@@ -1,6 +1,8 @@
+import { apiUrl } from './apiUrl';
+
 export const login = async (email: string, password: string) => {
     try {
-        const response = await fetch('http://localhost:8080/RaicesUrbanas/login', {
+        const response = await fetch(`${apiUrl}/RaicesUrbanas/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -13,9 +15,7 @@ export const login = async (email: string, password: string) => {
             throw new Error(`Error ${response.status}: ${errorText}`);
         }
 
-        // Asumiendo que el backend devuelve un token de autenticación.
         const data = await response.json();
-        // Guarda el token en el localStorage o sessionStorage
         localStorage.setItem('authToken', data.token);
         return data;
     } catch (error) {
@@ -24,8 +24,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (userName: string, email: string, password: string, roleName: string) => {
-    console.log("Datos a enviar: ", { userName, email, password, roleName }); // Verifica que el rol no sea nulo
-    const response = await fetch('http://localhost:8080/RaicesUrbanas/register', {
+    const response = await fetch(`${apiUrl}/RaicesUrbanas/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
