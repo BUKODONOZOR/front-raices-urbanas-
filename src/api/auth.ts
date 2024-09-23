@@ -1,5 +1,4 @@
 import { apiUrl } from './apiUrl';
-
 export const login = async (email: string, password: string) => {
     try {
         const response = await fetch(`${apiUrl}/RaicesUrbanas/login`, {
