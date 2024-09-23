@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation'; // Importa useRouter
 import styles from './login.module.css';
-import { login, register } from '@/api/auth';
+import { login, register } from '../../api/auth';
 
 const Login: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
