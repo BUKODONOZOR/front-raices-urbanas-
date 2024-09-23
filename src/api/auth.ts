@@ -1,24 +1,44 @@
-import { apiUrl } from "./apiUrl";
-import { UserData, UserLogin } from "@/interfaces/IDataUser";
-
-export const login = async (userLogin: UserLogin): Promise<UserLogin | null> => {
+export const login = async (email: string, password: string) => {
     try {
-        const response = await fetch(`${apiUrl}/RaicesUrbanas/login`, {
+        const response = await fetch('http://localhost:8080/RaicesUrbanas/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userLogin),
-        })
+            body: JSON.stringify({ email, password }),
+        });
 
         if (!response.ok) {
-            throw new Error('Server Error')
+            const errorText = await response.text();
+            throw new Error(`Error ${response.status}: ${errorText}`);
         }
 
-        const data: UserData = await response.json()
-        return data
+        // Asumiendo que el backend devuelve un token de autenticación.
+        const data = await response.json();
+        // Guarda el token en el localStorage o sessionStorage
+        localStorage.setItem('authToken', data.token);
+        return data;
     } catch (error) {
-        console.error('Error al iniciar sesión', error)
-        throw new Error('Error fetching user data')
+        throw new Error(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-}
+};
+
+export const register = async (userName: string, email: string, password: string, roleName: string) => {
+    console.log("Datos a enviar: ", { userName, email, password, roleName }); // Verifica que el rol no sea nulo
+    const response = await fetch('http://localhost:8080/RaicesUrbanas/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userName, email, password, roleName }),
+    });
+
+    const responseBody = await response.text();
+    console.log("Respuesta del servidor:", responseBody);
+
+    if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${responseBody}`);
+    }
+
+    return JSON.parse(responseBody);
+};
